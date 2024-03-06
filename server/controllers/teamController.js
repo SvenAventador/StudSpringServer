@@ -6,19 +6,15 @@ const {Team, Participant, ParticipantTeam} = require("../database");
 
 class TeamController {
     async createTeam(req, res, next) {
-        const {
-            profileId
-        } = req.params
-        const {
-            teamName,
-            fio
-        } = req.body
-        const {teamAvatar} = req.files || {}
+        const { profileId } = req.query;
+        const { teamName, fio } = req.body;
+        const { teamAvatar } = req.files || {};
         const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
         try {
             if (!Validation.isString(teamName))
-                return next(ErrorHandler.badRequest('Пожалуйста, введите корректное имя!'))
+                return next(ErrorHandler.badRequest('Пожалуйста, введите корректное имя!'));
+
             let fileName = null;
             if (teamAvatar !== undefined) {
                 const fileExtension = extname(teamAvatar.name).toLowerCase();
@@ -33,18 +29,17 @@ class TeamController {
                 teamName,
                 teamAvatar: fileName,
                 profileId
-            })
+            });
 
-            const participants = await Promise.all(fio.map(async (name) => {
-                const participant = await Participant.create({ name });
-                return participant.id;
-            }));
+            const names = fio.split(',')
 
-            await Promise.all(participants.map(async (participantId) => {
+            const participants = await Promise.all(names.map(async (name) => {
+                const participant = await Participant.create({ participantName: name });
                 await ParticipantTeam.create({
-                    ParticipantId: participantId,
+                    ParticipantId: participant.id,
                     TeamId: team.id
                 });
+                return participant;
             }));
 
             const responseData = {
@@ -55,13 +50,14 @@ class TeamController {
                 },
                 participants: participants.map(participant => ({
                     id: participant.id,
-                    name: participant.name
+                    name: participant.participantName
                 }))
             };
 
-            return res.json({responseData})
+            res.status(201).json(responseData);
+
         } catch (error) {
-            return next(ErrorHandler.internal(`Непредвиденная ошибка: ${error}`))
+            return next(ErrorHandler.internal(`Непредвиденная ошибка: ${error}`));
         }
     }
 }
