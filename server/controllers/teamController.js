@@ -8,7 +8,7 @@ class TeamController {
     async createTeam(req, res, next) {
         const {
             profileId
-        } = req.query
+        } = req.params
         const {
             teamName,
             fio
@@ -31,7 +31,8 @@ class TeamController {
 
             const team = await Team.create({
                 teamName,
-                teamAvatar: fileName
+                teamAvatar: fileName,
+                profileId
             })
 
             const participants = await Promise.all(fio.map(async (name) => {
@@ -46,6 +47,19 @@ class TeamController {
                 });
             }));
 
+            const responseData = {
+                team: {
+                    id: team.id,
+                    teamName: team.teamName,
+                    teamAvatar: team.teamAvatar,
+                },
+                participants: participants.map(participant => ({
+                    id: participant.id,
+                    name: participant.name
+                }))
+            };
+
+            return res.json({responseData})
         } catch (error) {
             return next(ErrorHandler.internal(`Непредвиденная ошибка: ${error}`))
         }

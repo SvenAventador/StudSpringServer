@@ -135,19 +135,18 @@ class PersonalController {
             if (!institute)
                 return next(ErrorHandler.notFound('Данное учебное заведение не найдено!'));
 
-            const candidate = await Profile.update({
+            const candidate = await Profile.findOne({where: {userId: userId}})
+
+            await candidate.update({
                 profileFio,
                 birthday,
                 gender,
                 phoneNumber,
                 telegramLink,
-                avatar: fileName
-            }, {
-                where: {
-                    userId,
-                    educationOrganisationId
-                }
-            });
+                avatar: fileName,
+                educationOrganisationId
+
+            })
 
             return res.json({ candidate });
         } catch (error) {

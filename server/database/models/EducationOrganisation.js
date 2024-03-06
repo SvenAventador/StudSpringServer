@@ -10,7 +10,8 @@ const EducationOrganisation = sequelize.define('education_organisation', {
     },
     fullNameOrganisation: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     address: {
         type: DataTypes.TEXT,
