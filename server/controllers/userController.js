@@ -65,10 +65,7 @@ class UserController {
             const token = Validation.generate_jwt(
                 candidate.id,
                 candidate.userEmail,
-                candidate.userRole,
-                candidate.userFio,
-                candidate.userAddress,
-                candidate.userPhone
+                candidate.userRole
             )
             return res.json({token})
         } catch (error) {

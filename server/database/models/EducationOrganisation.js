@@ -18,24 +18,24 @@ const EducationOrganisation = sequelize.define('education_organisation', {
     },
 })
 
-// EducationOrganisation.bulkCreate([
-//     {
-//         fullNameOrganisation: 'КНИТУ-КАИ',
-//         address: 'Город Казань, улица Большая Красная 55'
-//     },
-//     {
-//         fullNameOrganisation: 'КНИТУ-КХТИ',
-//         address: 'Город Казань, улица Большая Красная 55'
-//     },
-//     {
-//         fullNameOrganisation: 'МГУ',
-//         address: 'Город Казань, улица Большая Красная 55'
-//     }
-// ]).then(() => {
-//     console.log('Данные успешно добавлены в таблицу Role!')
-// }).catch((error) => {
-//     console.error(`При попытке добавить данные в таблицу Role произошли следующие ошибки: ${error}`)
-// })
+EducationOrganisation.bulkCreate([
+    {
+        fullNameOrganisation: 'КНИТУ-КАИ',
+        address: 'Город Казань, улица Большая Красная 55'
+    },
+    {
+        fullNameOrganisation: 'КНИТУ-КХТИ',
+        address: 'Город Казань, улица Большая Красная 55'
+    },
+    {
+        fullNameOrganisation: 'МГУ',
+        address: 'Город Казань, улица Большая Красная 55'
+    }
+]).then(() => {
+    console.log('Данные успешно добавлены в таблицу Role!')
+}).catch((error) => {
+    console.error(`При попытке добавить данные в таблицу Role произошли следующие ошибки: ${error}`)
+})
 
 EducationOrganisation.hasMany(Profile)
 Profile.belongsTo(EducationOrganisation)

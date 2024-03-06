@@ -5,6 +5,21 @@ const {extname, resolve} = require("path");
 const uuid = require("uuid");
 
 class PersonalController {
+
+    async getAccount(req, res, next) {
+        const {id} = req.params
+        try {
+            const candidateOnUser = await User.findByPk(id)
+            if (!candidateOnUser)
+                return next(ErrorHandler.notFound('Данный аккаунт не найден!'))
+
+            const candidate = await Profile.findOne({where: {userId: id}})
+            return res.json({candidate})
+        } catch (error) {
+            return next(ErrorHandler.internal(`Непредвиденная ошибка: ${error}`))
+        }
+    }
+
     async createAccount(req, res, next) {
         const {
             userId,
@@ -19,7 +34,7 @@ class PersonalController {
             telegramLink,
         } = req.body
 
-        const {merchandiseImage} = req.files || {}
+        const {avatar} = req.files || {}
         const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
         try {
@@ -29,18 +44,15 @@ class PersonalController {
             if (!Validation.isDate(birthday))
                 return next(ErrorHandler.badRequest('Пожалуйста, введите корректную дату!'))
 
-            if (!Validation.isString(gender) || gender !== 'Мужский' || gender !== 'Женский')
-                return next(ErrorHandler.conflict('Пожалуйста, введите корректный пол!'))
-
             if (!Validation.isString(phoneNumber) || !Validation.isPhone(phoneNumber))
                 return next(ErrorHandler.badRequest('Пожалуйста, введите корректный телефон!'))
 
             if (!Validation.isString(telegramLink))
                 return next(ErrorHandler.badRequest('Пожалуйста, введите корректный телеграмм линк!'))
 
-            if (merchandiseImage === undefined)
+            if (avatar === undefined)
                 return next(ErrorHandler.badRequest('Пожалуйста, выберите изображение!'))
-            const fileExtension = extname(merchandiseImage.name).toLowerCase()
+            const fileExtension = extname(avatar.name).toLowerCase()
             if (!allowedImageExtensions.includes(fileExtension))
                 return next(ErrorHandler.badRequest('Пожалуйста, загрузите файл в формате изображения: jpg, jpeg, png или gif!'))
 
@@ -53,7 +65,7 @@ class PersonalController {
                 return next(ErrorHandler.notFound('Данное учебное заведение не найдено!'))
 
             let fileName = uuid.v4() + ".jpg"
-            await merchandiseImage.mv(resolve(__dirname, '..', 'static', fileName))
+            await avatar.mv(resolve(__dirname, '..', 'static', fileName))
 
             const candidate = await Profile.create({
                 userId,
@@ -86,7 +98,7 @@ class PersonalController {
             telegramLink,
         } = req.body;
 
-        const { merchandiseImage } = req.files || {};
+        const { avatar } = req.files || {};
         const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
         try {
@@ -106,13 +118,13 @@ class PersonalController {
                 return next(ErrorHandler.badRequest('Пожалуйста, введите корректный телеграмм линк!'));
 
             let fileName = null;
-            if (merchandiseImage !== undefined) {
-                const fileExtension = extname(merchandiseImage.name).toLowerCase();
+            if (avatar !== undefined) {
+                const fileExtension = extname(avatar.name).toLowerCase();
                 if (!allowedImageExtensions.includes(fileExtension))
                     return next(ErrorHandler.badRequest('Пожалуйста, загрузите файл в формате изображения: jpg, jpeg, png или gif!'));
 
                 fileName = uuid.v4() + ".jpg";
-                await merchandiseImage.mv(resolve(__dirname, '..', 'static', fileName));
+                await avatar.mv(resolve(__dirname, '..', 'static', fileName));
             }
 
             const userCandidate = await User.findByPk(userId);

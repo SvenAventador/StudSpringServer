@@ -59,18 +59,12 @@ class Validation {
     static generate_jwt(
         userId,
         userEmail,
-        userRole,
-        userFio = null,
-        userAddress = null,
-        userPhone = null
+        userRole
     ) {
         const payload = {
             userId,
             userEmail,
-            userRole,
-            userFio,
-            userAddress,
-            userPhone
+            userRole
         }
 
         return jwt.sign(

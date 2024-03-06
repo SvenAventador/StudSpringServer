@@ -15,18 +15,18 @@ const Role = sequelize.define('role', {
     }
 })
 
-// Role.bulkCreate([
-//     {
-//         roleName: 'Участник'
-//     },
-//     {
-//         roleName: 'Организатор'
-//     }
-// ]).then(() => {
-//     console.log('Данные успешно добавлены в таблицу Role!')
-// }).catch((error) => {
-//     console.error(`При попытке добавить данные в таблицу Role произошли следующие ошибки: ${error}`)
-// })
+Role.bulkCreate([
+    {
+        roleName: 'Участник'
+    },
+    {
+        roleName: 'Организатор'
+    }
+]).then(() => {
+    console.log('Данные успешно добавлены в таблицу Role!')
+}).catch((error) => {
+    console.error(`При попытке добавить данные в таблицу Role произошли следующие ошибки: ${error}`)
+})
 
 Role.hasMany(User)
 User.belongsTo(Role)
