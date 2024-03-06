@@ -87,7 +87,7 @@ class PersonalController {
     async updateAccount(req, res, next) {
         const {
             userId
-        } = req.query;
+        } = req.params;
 
         const {
             profileFio,
