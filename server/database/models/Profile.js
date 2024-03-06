@@ -10,27 +10,22 @@ const Profile = sequelize.define('profile', {
     },
     profileFio: {
         type: DataTypes.STRING,
-        allowNull: false
     },
     birthday: {
         type: DataTypes.DATEONLY,
-        allowNull: false
     },
     gender: {
         type: DataTypes.ENUM('Мужский', 'Женский'),
-        allowNull: false
     },
     phoneNumber: {
         type: DataTypes.STRING,
-        allowNull: false
     },
     telegramLink: {
         type: DataTypes.STRING,
-        allowNull: false
     },
     avatar: {
         type: DataTypes.TEXT,
-        allowNull: null
+        defaultValue: 'empty.jpg'
     }
 })
 

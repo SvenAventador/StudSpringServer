@@ -2,7 +2,7 @@ const Validation = require("../validations/validation");
 const ErrorHandler = require("../errors/errorHandler");
 const bcrypt = require("bcrypt");
 const {
-    User
+    User, Profile
 } = require("../database");
 
 class UserController {
@@ -28,6 +28,15 @@ class UserController {
                 userEmail,
                 userPassword: await bcrypt.hash(userPassword, 5),
                 userRole
+            })
+
+            await Profile.create({
+                profileFio: null,
+                birthday: null,
+                gender: null,
+                phoneNumber: null,
+                telegramLink: null,
+                userId: user.id
             })
 
             const token = Validation.generate_jwt(
