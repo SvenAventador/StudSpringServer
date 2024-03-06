@@ -1,5 +1,6 @@
 const ErrorHandler = require("../errors/errorHandler");
 const {Application, Direction, Requisite} = require("../database");
+const Validation = require("../validations/validation");
 
 class ApplicationController {
     async getAllApplication(req, res, next) {
@@ -41,7 +42,50 @@ class ApplicationController {
     }
 
     async createApplication(req, res, next) {
+        const {
+            applicationTitle,
+            applicationDescription,
+            applicationTiming,
+            applicationSupervisor,
+            applicationContacts,
+            applicationTechCondition,
+            directionId,
+            teamId,
+            requisiteId
+        } = req.body
+        const {userId} = req.params
 
+        try {
+            if (!Validation.isString(applicationTitle))
+                return next(ErrorHandler.badRequest('Пожалуйста, введите корректное название заявки!'))
+            if (!Validation.isString(applicationDescription))
+                return next(ErrorHandler.badRequest('Пожалуйста, введите корректное описание заявки!'))
+            if (!Validation.isTime(applicationTiming))
+                return next(ErrorHandler.badRequest('Пожалуйста, введите корректное время!'))
+            if (!Validation.isString(applicationSupervisor))
+                return next(ErrorHandler.badRequest('Пожалуйста, введите корректного куратора!'))
+            if (!Validation.isPhone(applicationContacts))
+                return next(ErrorHandler.badRequest('Пожалуйста, введите корректный номер телефона!'))
+            if (!Validation.isString(applicationTechCondition))
+                return next(ErrorHandler.badRequest('Пожалуйста, введите корректный'))
+
+            const candidate = await Application.create({
+                applicationTitle,
+                applicationDescription,
+                applicationTiming,
+                applicationSupervisor,
+                applicationContacts,
+                applicationTechCondition,
+                directionId,
+                teamId,
+                requisiteId,
+                userId
+            })
+
+            return res.json({candidate})
+        } catch (error) {
+            return next(ErrorHandler.internal(`Непредвиденная ошибка: ${error}`))
+        }
     }
 
     async deleteApplication(req, res, next) {

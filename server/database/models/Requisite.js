@@ -17,19 +17,19 @@ const Requisite = sequelize.define('requisite', {
 
 Requisite.bulkCreate([
     {
-        categoryName: 'name1'
+        requisiteName: 'name1'
     },
     {
-        categoryName: 'name2'
+        requisiteName: 'name2'
     },
     {
-        categoryName: 'name3'
+        requisiteName: 'name3'
     },
     {
-        categoryName: 'name4'
+        requisiteName: 'name4'
     },
     {
-        categoryName: 'name5'
+        requisiteName: 'name5'
     }
 ]).then(() => {
     console.log('Данные успешно добавились в таблицу Requisite!')

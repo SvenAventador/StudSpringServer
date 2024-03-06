@@ -4,7 +4,7 @@ const ApplicationController = require('../controllers/applicationController')
 
 routes.get('/getAllApplication', ApplicationController.getAllApplication)
 routes.get('/getOneApplication', ApplicationController.getOneApplication)
-routes.post('/createApplication', ApplicationController.createApplication)
+routes.post('/createApplication/:userId', ApplicationController.createApplication)
 routes.delete('/deleteApplication', ApplicationController.deleteApplication)
 
 module.exports = routes

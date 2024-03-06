@@ -3,15 +3,17 @@ const ErrorHandler = require("../errors/errorHandler");
 const {extname, resolve} = require("path");
 const uuid = require("uuid");
 const {Team, Participant, ParticipantTeam} = require("../database");
+const {Sequelize} = require("sequelize");
 
 class TeamController {
     async createTeam(req, res, next) {
         const { profileId } = req.params;
-        const { teamName, fio } = req.body;
+        const { teamName, 'fio[]': fio } = req.body;
         const { teamAvatar } = req.files || {};
         const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
         try {
+            console.log(req.body);
             if (!Validation.isString(teamName))
                 return next(ErrorHandler.badRequest('Пожалуйста, введите корректное имя!'));
 
@@ -31,7 +33,7 @@ class TeamController {
                 profileId
             });
 
-            const names = fio.split(',')
+            const names = fio
 
             const participants = await Promise.all(names.map(async (name) => {
                 const participant = await Participant.create({ participantName: name });
@@ -60,6 +62,7 @@ class TeamController {
             return next(ErrorHandler.internal(`Непредвиденная ошибка: ${error}`));
         }
     }
+
 
     async getAllTeam(req, res, next) {
         const {profileId} = req.params
