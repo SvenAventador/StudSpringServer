@@ -80,6 +80,21 @@ class TeamController {
             return next(ErrorHandler.internal(`Непредвиденная ошибка: ${error}`));
         }
     }
+
+    async deleteOneTeam(req, res, next) {
+        const {id} = req.query
+        try {
+            await Team.findByPk(id).then(async (data) => {
+                if (!data)
+                    return next(ErrorHandler.notFound('Данной команды не найдено!'))
+
+                await data.destroy()
+                return res.status(200).json({message: 'Данная команда успешно удалена'})
+            })
+        } catch (error) {
+            return next(ErrorHandler.internal(`Непредвиденная ошибка: ${error}`));
+        }
+    }
 }
 
 module.exports = new TeamController()
