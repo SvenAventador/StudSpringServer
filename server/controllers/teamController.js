@@ -13,7 +13,6 @@ class TeamController {
         const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
         try {
-            console.log(req.body);
             if (!Validation.isString(teamName))
                 return next(ErrorHandler.badRequest('Пожалуйста, введите корректное имя!'));
 
@@ -85,7 +84,7 @@ class TeamController {
     }
 
     async deleteOneTeam(req, res, next) {
-        const {id} = req.query
+        const {id} = req.params
         try {
             await Team.findByPk(id).then(async (data) => {
                 if (!data)
