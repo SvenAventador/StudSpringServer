@@ -17,7 +17,8 @@ class ApplicationController {
         try {
             const candidate = await Application.findByPk(id, {
                 include: {
-                    model: Direction
+                    model: Direction,
+
                 },
             })
             return res.json({candidate})
