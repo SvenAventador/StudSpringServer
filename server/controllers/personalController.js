@@ -86,8 +86,7 @@ class PersonalController {
 
     async updateAccount(req, res, next) {
         const {
-            userId,
-            educationOrganisationId
+            userId
         } = req.query;
 
         const {
@@ -96,6 +95,7 @@ class PersonalController {
             gender,
             phoneNumber,
             telegramLink,
+            educationOrganisationId
         } = req.body;
 
         const { avatar } = req.files || {};

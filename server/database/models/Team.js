@@ -12,6 +12,9 @@ const Team = sequelize.define('team', {
    teamName: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    teamAvatar: {
+        type: DataTypes.TEXT
     }
 })
 
