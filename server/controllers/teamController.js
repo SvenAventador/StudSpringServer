@@ -6,7 +6,7 @@ const {Team, Participant, ParticipantTeam} = require("../database");
 
 class TeamController {
     async createTeam(req, res, next) {
-        const { profileId } = req.query;
+        const { profileId } = req.params;
         const { teamName, fio } = req.body;
         const { teamAvatar } = req.files || {};
         const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
@@ -36,8 +36,8 @@ class TeamController {
             const participants = await Promise.all(names.map(async (name) => {
                 const participant = await Participant.create({ participantName: name });
                 await ParticipantTeam.create({
-                    ParticipantId: participant.id,
-                    TeamId: team.id
+                    participantId: participant.id,
+                    teamId: team.id
                 });
                 return participant;
             }));
@@ -56,6 +56,26 @@ class TeamController {
 
             res.status(201).json(responseData);
 
+        } catch (error) {
+            return next(ErrorHandler.internal(`Непредвиденная ошибка: ${error}`));
+        }
+    }
+
+    async getAllTeam(req, res, next) {
+        const {profileId} = req.params
+
+        try {
+            const teams = await Team.findAll({
+                where: { profileId },
+                include: [
+                    {
+                        model: ParticipantTeam,
+                        include: [Participant]
+                    }
+                ]
+            });
+
+            return res.json({teams});
         } catch (error) {
             return next(ErrorHandler.internal(`Непредвиденная ошибка: ${error}`));
         }
